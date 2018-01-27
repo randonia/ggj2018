@@ -14,10 +14,13 @@ class GameObject {
   set y(value) {
     this._y = value;
   }
+  get size() {
+    return this._size;
+  }
   constructor(opts = {}) {
-    // Force everything off screen initially
     this.x = opts.x || 0;
     this.y = opts.y || 0;
+    this._size = opts.size || 1;
   }
   update(delta) {
     if (this._sprite) {

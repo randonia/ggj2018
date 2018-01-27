@@ -10,8 +10,8 @@ class GameState {
   create() {
     lineGfx = game.add.graphics(0, 0);
     game.world.setBounds(-2 * WIDTH, -2 * HEIGHT, 2 * WIDTH, 2 * HEIGHT);
-    game.camera.setPosition(0, 0);
     game.camera.setSize(WIDTH / 2, HEIGHT / 2);
+    game.camera.setPosition(0, 0);
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     game.stage.disableVisibilityChange = true;
@@ -21,12 +21,19 @@ class GameState {
     gameobjects = this._gameobjects; // Take this out after dev
     planets = this._planets; // Take this out after dev
     stars = this._stars; // Take this out after dev
-    this._createPlanet();
+    const star1 = this._createStar();
     this._createPlanet({
-      x: 150,
-      y: 0
+      orbitTarget: star1,
+      orbitRange: 900,
+      offset: Math.random(),
+      speed: Math.random(),
     });
-    game.camera.follow(planets[0].sprite);
+    this._createPlanet({
+      orbitTarget: star1,
+      orbitRange: 300,
+      offset: Math.random(),
+      speed: Math.random(),
+    });
   }
   _createPlanet(opts = {}) {
     const p = new Planet(opts);
@@ -62,7 +69,6 @@ class GameState {
         lineGfx.moveTo(line.start.x, line.start.y);
         lineGfx.lineTo(line.end.x, line.end.y);
         lineGfx.endFill();
-        // game.debug.geom(line);
       }
     }
 
