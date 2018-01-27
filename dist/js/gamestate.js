@@ -25,7 +25,10 @@ class GameState {
     planets = this._planets; // Take this out after dev
     stars = this._stars; // Take this out after dev
 
-    player = new Player();
+    player = new Player({
+      x: 150,
+      y: 25
+    });
     gameobjects.push(player);
     game.camera.follow(player.sprite, undefined, 0.1, 0.1);
     command = new Command();
@@ -67,6 +70,13 @@ class GameState {
     });
     // Update the system data
     UI.updateSystemData(systemData);
+
+    setTimeout(() => this._createAIShip(), 250);
+  }
+  _createAIShip(opts = {}) {
+    const ship = new AIShip();
+    this._gameobjects.push(ship);
+    return ship;
   }
   _createPlanet(opts = {}) {
     const p = new Planet(opts);

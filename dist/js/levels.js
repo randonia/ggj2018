@@ -22,6 +22,11 @@ const LEVEL_DATA = {
       offset: Math.random(),
       id: 'AX02',
     }, {
+      orbitTarget: 'star|0xA01',
+      orbitRange: 450,
+      offset: Math.random(),
+      id: 'AX03',
+    }, {
       orbitTarget: 'planet|AX02',
       orbitRange: 50,
       size: 15,

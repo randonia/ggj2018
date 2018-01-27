@@ -50,7 +50,6 @@ class Command {
    * Generic key handler for all keys. Accepts phaser signals and keypress events
    */
   handleKeyPress(kEvent) {
-    console.log('handle:', kEvent);
     switch (kEvent.keyCode) {
       case Phaser.KeyCode.BACKSPACE:
         this.deleteChar();
@@ -71,7 +70,6 @@ class Command {
         console.warn('CMD AUTOCOMPLETE NOT IMPLEMENTED');
         break;
       default:
-        console.log(kEvent, typeof kEvent);
         this.addTextToCommand(kEvent);
         break;
     }

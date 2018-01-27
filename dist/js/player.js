@@ -1,6 +1,12 @@
 class Player extends Ship {
+  constructor(opts = {}) {
+    Object.assign(opts, {
+      id: 'player',
+    });
+    super(opts);
+  }
   addIdText(gfx) {
-    this._text = game.add.text(this.x, this.y, '', TEXT_STYLE);
+    this._text = game.add.text(0, 0, 'You', TEXT_STYLE);
   }
   registerSignals(signals) {
     signals.onCommandMove.add(this.handleMoveSignal, this);

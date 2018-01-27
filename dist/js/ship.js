@@ -5,13 +5,16 @@ const SHIPSTATE = {
 }
 class Ship extends GfxGameObject {
   get orbitRangeSqr() {
-    return (this._orbitTarget) ? Math.pow(this._orbitTarget.size, 2) : 150;
+    return (this._primary) ? Math.pow(this._primary.size, 2) : 150;
   }
   get orbitRange() {
-    return (this._orbitTarget) ? this._orbitTarget.size : 100;
+    return (this._primary) ? this._primary.size : 100;
   }
   get speed() {
     return this._speed;
+  }
+  get orbitSpeed() {
+    return 10 / this._primary.size;
   }
   constructor(opts = {}) {
     Object.assign(opts, {
@@ -36,8 +39,17 @@ class Ship extends GfxGameObject {
       new Phaser.Point(0, 0),
     ].map(item => item.multiply(20, 20));
   }
+  // By name
+  target(orbitTarget) {
+    this._orbitTarget = orbitTarget;
+    // find the primary
+    this._primary = gameobjects.filter(go => go.id.toLowerCase() === orbitTarget.toLowerCase())[0];
+    this._state = SHIPSTATE.TRAVELING;
+  }
+  // By object
   orbit(target) {
-    this._orbitTarget = target;
+    this._primary = target;
+    this._orbitTarget = target.id;
     this._state = SHIPSTATE.TRAVELING;
   }
   update() {
@@ -56,7 +68,7 @@ class Ship extends GfxGameObject {
   }
   _travelUpdate() {
     const {
-      _orbitTarget: primary,
+      _primary: primary,
       _dir: dirVec,
     } = this;
     if (primary) {
@@ -68,7 +80,7 @@ class Ship extends GfxGameObject {
       } else {
         // We're done traveling, start orbiting
         this._state = SHIPSTATE.ORBITING;
-        dirVec.set(0, 0);
+        this._offset = Math.atan(dirVec.y / dirVec.x);
       }
       this.x += dirVec.x * this.speed;
       this.y += dirVec.y * this.speed;
@@ -79,9 +91,10 @@ class Ship extends GfxGameObject {
   }
   _orbitUpdate() {
     const {
-      _orbitTarget: primary
+      _primary: primary,
+      _offset: offset,
     } = this;
-    const now = game.time.totalElapsedSeconds() * this.speed;
+    const now = game.time.totalElapsedSeconds() * this.orbitSpeed + (offset || 0);
     const dirVec = new Phaser.Point(Math.cos(now), Math.sin(now));
     dirVec.setMagnitude(this.orbitRange);
     this.x = primary.x + dirVec.x;
@@ -91,7 +104,7 @@ class Ship extends GfxGameObject {
   render() {
     super.render();
     const {
-      _orbitTarget: primary
+      _primary: primary
     } = this;
     if (primary) {
       lineGfx.lineStyle(1, 0x33ff33, 0.3);
