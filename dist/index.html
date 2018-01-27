@@ -8,8 +8,10 @@
   <link href="https://fonts.googleapis.com/css?family=Audiowide" rel="stylesheet">
 
   <meta charset="utf-8" />
+  <script src="js/charmap.js" type="text/javascript"></script>
   <script type="text/javascript">
-    console.info('ＧＧＪ２０１８ ｌｏｎｅｓｏｍｅ ｒｅｔｕｒｎ ｔｒｉｐ．');
+    // Define a function 'log' before page load if this errors
+    log('GGJ2018 lonesome return trip.');
     // Parse out all the debug parameters and use it to define ENV variables
     var ENV = window.location.search.substr(1).split('&').map(item => item.split('=')).reduce((acc, val) => { acc[val[0]] = val[1]; return acc }, {});
   </script>
@@ -20,6 +22,7 @@
   <script src="js/planet.js" type="text/javascript"></script>
   <script src="js/ship.js" type="text/javascript"></script>
   <script src="js/player.js" type="text/javascript"></script>
+  <script src="js/command.js" type="text/javascript"></script>
   <script src="js/game.js" type="text/javascript"></script>
 </head>
 <body>

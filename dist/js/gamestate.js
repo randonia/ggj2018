@@ -3,6 +3,7 @@ var planets;
 var stars;
 var lineGfx;
 var player;
+var command;
 /**
  * Base state class
  **/
@@ -40,7 +41,8 @@ class GameState {
       player.orbit(planets[0]);
     }, 25);
     gameobjects.push(player);
-    game.camera.follow(player.sprite);
+    game.camera.follow(player.sprite, undefined, 0.1, 0.1);
+    command = new Command();
   }
   _createPlanet(opts = {}) {
     const p = new Planet(opts);
@@ -55,6 +57,7 @@ class GameState {
   update() {
     gameobjects.forEach(go => go.update());
     planets.forEach(planet => planet.update());
+    command.update();
   }
   render() {
     lineGfx.clear();
@@ -65,9 +68,8 @@ class GameState {
       game.debug.cameraInfo(game.camera, 32, 32);
       game.debug.spriteInfo(player.sprite, 384, 32);
       game.debug.quadTree(game.physics.arcade.quadTree);
-
     }
-
+    command.render();
     // Draw each planet to each other planet
     for (var pAIdx = 0; pAIdx < planets.length; pAIdx++) {
       const planetA = planets[pAIdx];

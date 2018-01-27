@@ -86,6 +86,7 @@ class Ship extends GfxGameObject {
     dirVec.setMagnitude(this.orbitRange);
     this.x = primary.x + dirVec.x;
     this.y = primary.y + dirVec.y;
+    // TODO: Rotate the sprite as a function of perp to the target
   }
   render() {
     super.render();
