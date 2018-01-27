@@ -20,10 +20,13 @@ class Planet extends GfxGameObject {
     gfx.beginFill(this.secondaryColor, 0.1);
     gfx.drawCircle(0, 0, this._size);
   }
+  setOrbit(target) {
+    this._primary = target;
+  }
   update() {
     super.update();
     const {
-      _orbitTarget: primary,
+      _primary: primary,
       _orbitRange: distance,
       _offset: offset,
       _speed: speed,
@@ -41,7 +44,7 @@ class Planet extends GfxGameObject {
   render() {
     super.render();
     const {
-      _orbitTarget: primary,
+      _primary: primary,
     } = this;
     if (primary) {
       lineGfx.lineStyle(1, Phaser.Color.YELLOW, 0.2);

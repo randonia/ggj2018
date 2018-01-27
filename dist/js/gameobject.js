@@ -21,9 +21,11 @@ class GameObject {
     return this._size;
   }
   constructor(opts = {}) {
+    this.id = opts.id || Math.random().toString().substr(2);
     this.x = opts.x || 0;
     this.y = opts.y || 0;
     this._size = opts.size || 1;
+    this._fontProps = opts.fontProps || {};
   }
   update(delta) {
     if (this._sprite) {
@@ -41,6 +43,13 @@ class GameObject {
     }
   }
 }
+const TEXT_STYLE = {
+  font: 'Audiowide',
+  fontSize: FONTSIZE.NORMAL,
+  stroke: '#000000',
+  strokeThickness: 3,
+  fill: '#43d637',
+};
 class GfxGameObject extends GameObject {
   get primaryColor() {
     return Phaser.Color.WHITE;
@@ -52,7 +61,13 @@ class GfxGameObject extends GameObject {
     super(opts);
     var gfx = game.add.graphics(0, 0);
     this.fillGfx(gfx);
+    // Set the text
+    this.addIdText(gfx);
+    gfx.addChild(this._text);
     this._sprite = gfx;
     this._sprite.anchor.x = this._sprite.anchor.y = 0.5;
   }
+  addIdText(gfx) {
+    this._text = game.add.text(this.x, this.y, this.id, Object.assign({}, TEXT_STYLE, this._fontProps));
+  };
 }

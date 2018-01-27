@@ -4,6 +4,7 @@ var stars;
 var lineGfx;
 var player;
 var command;
+var UI;
 /**
  * Base state class
  **/
@@ -23,26 +24,49 @@ class GameState {
     gameobjects = this._gameobjects; // Take this out after dev
     planets = this._planets; // Take this out after dev
     stars = this._stars; // Take this out after dev
-    const star1 = this._createStar();
-    this._createPlanet({
-      orbitTarget: star1,
-      orbitRange: 900,
-      offset: Math.random(),
-      speed: Math.random(),
-    });
-    this._createPlanet({
-      orbitTarget: star1,
-      orbitRange: 300,
-      offset: Math.random(),
-      speed: Math.random(),
-    });
-    player = new Ship();
-    setTimeout(() => {
-      player.orbit(planets[0]);
-    }, 25);
+
+    player = new Player();
     gameobjects.push(player);
     game.camera.follow(player.sprite, undefined, 0.1, 0.1);
     command = new Command();
+    UI = new UIController();
+    this.loadSystem(LEVEL_DATA.system1);
+  }
+  // Load in data from levels.js
+  loadSystem(systemData) {
+    // First create everything
+    systemData.stars.forEach(starData => {
+      // Create stars
+      this._createStar(starData);
+    });
+    systemData.planets.forEach(planetData => {
+      // Create planets
+      this._createPlanet(planetData);
+    });
+    // Now go through and set orbits for planets (do this after so planets can orbit other planets)
+    this._planets.forEach(planet => {
+      // Find the target
+      const [targetType, targetId] = planet._orbitTarget.split('|');
+      let target;
+      switch (targetType) {
+        case 'star':
+          target = this._stars.filter(otherStar => otherStar.id === targetId)[0];
+          break;
+        case 'planet':
+          target = this._planets.filter(otherPlanet => otherPlanet.id === targetId)[0];
+          break;
+        default:
+          console.warn('Unhandled type:', targetType);
+          break;
+      }
+      if (target) {
+        planet.setOrbit(target);
+      } else {
+        console.warn('No orbit target for ', planet.id);
+      }
+    });
+    // Update the system data
+    UI.updateSystemData(systemData);
   }
   _createPlanet(opts = {}) {
     const p = new Planet(opts);

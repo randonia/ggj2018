@@ -21,6 +21,20 @@ class Command {
       TAB: game.input.keyboard.addKey(Phaser.KeyCode.TAB),
     };
     Object.keys(this._keys).forEach(keyKey => this._keys[keyKey].onDown.add(this.handleKeySignal, this));
+    // Ensure the player exists before registering
+    setTimeout(() => this.registerPlayer(), 125);
+  }
+  registerPlayer(attempts = 0) {
+    if (attempts > 5) {
+      console.error('Could not register player to command interface');
+      return;
+    }
+    if (player) {
+      // Do registering of signals
+      log('registering player with command interface');
+    } else {
+      setTimeout(() => this.registerPlayer(attempts + 1), 250);
+    }
   }
   // Specific handler for _keys registered inputs
   handleKeySignal(signal) {
@@ -75,6 +89,6 @@ class Command {
 
   }
   render() {
-    game.debug.text(sprintf('$: %s', convert(this._message)), 500, 500);
+    game.debug.text(sprintf('$: %s', convert(this._message)), 100, HEIGHT - 50);
   }
 }
