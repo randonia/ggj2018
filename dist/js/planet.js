@@ -1,19 +1,3 @@
-class GfxGameObject extends GameObject {
-  get primaryColor() {
-    return Phaser.Color.WHITE;
-  }
-  get secondaryColor() {
-    return Phaser.Color.WHITE;
-  }
-  constructor(opts) {
-    super(opts);
-    var gfx = game.add.graphics(0, 0);
-    this.fillGfx(gfx);
-    this._sprite = gfx;
-    this._sprite.anchor.x = this._sprite.anchor.y = 0.5;
-    game.physics.arcade.enable(this.sprite);
-  }
-}
 class Planet extends GfxGameObject {
   /**
       Options for a planet:

@@ -2,6 +2,9 @@ class GameObject {
   get sprite() {
     return this._sprite;
   }
+  get pos() {
+    return this.sprite.position;
+  }
   get x() {
     return this._x;
   }
@@ -36,5 +39,20 @@ class GameObject {
     if (this._sprite) {
       this._sprite.destroy();
     }
+  }
+}
+class GfxGameObject extends GameObject {
+  get primaryColor() {
+    return Phaser.Color.WHITE;
+  }
+  get secondaryColor() {
+    return Phaser.Color.WHITE;
+  }
+  constructor(opts) {
+    super(opts);
+    var gfx = game.add.graphics(0, 0);
+    this.fillGfx(gfx);
+    this._sprite = gfx;
+    this._sprite.anchor.x = this._sprite.anchor.y = 0.5;
   }
 }

@@ -2,6 +2,7 @@ var gameobjects;
 var planets;
 var stars;
 var lineGfx;
+var player;
 /**
  * Base state class
  **/
@@ -9,12 +10,12 @@ class GameState {
   preload() {}
   create() {
     lineGfx = game.add.graphics(0, 0);
-    game.world.setBounds(-2 * WIDTH, -2 * HEIGHT, 2 * WIDTH, 2 * HEIGHT);
-    game.camera.setSize(WIDTH / 2, HEIGHT / 2);
-    game.camera.setPosition(0, 0);
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.world.setBounds(-2 * WIDTH, -2 * HEIGHT, 4 * WIDTH, 4 * HEIGHT);
+    game.camera.setBoundsToWorld();
 
+    // Prevent pausing on lose focus
     game.stage.disableVisibilityChange = true;
+
     this._gameobjects = [];
     this._planets = [];
     this._stars = [];
@@ -34,6 +35,12 @@ class GameState {
       offset: Math.random(),
       speed: Math.random(),
     });
+    player = new Ship();
+    setTimeout(() => {
+      player.orbit(planets[0]);
+    }, 25);
+    gameobjects.push(player);
+    game.camera.follow(player.sprite);
   }
   _createPlanet(opts = {}) {
     const p = new Planet(opts);
@@ -54,7 +61,12 @@ class GameState {
     gameobjects.forEach(go => go.render());
     planets.forEach(planet => planet.render());
     const line = new Phaser.Line(0, 0, 0, 0);
-    game.debug.cameraInfo(game.camera, 32, 32);
+    if (ENV.debug) {
+      game.debug.cameraInfo(game.camera, 32, 32);
+      game.debug.spriteInfo(player.sprite, 384, 32);
+      game.debug.quadTree(game.physics.arcade.quadTree);
+
+    }
 
     // Draw each planet to each other planet
     for (var pAIdx = 0; pAIdx < planets.length; pAIdx++) {
