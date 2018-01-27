@@ -91,7 +91,6 @@ class GameState {
     if (ENV.debug) {
       game.debug.cameraInfo(game.camera, 32, 32);
       game.debug.spriteInfo(player.sprite, 384, 32);
-      game.debug.quadTree(game.physics.arcade.quadTree);
     }
     command.render();
     // Draw each planet to each other planet
