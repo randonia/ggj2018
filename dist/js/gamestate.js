@@ -71,22 +71,22 @@ class GameState {
   _createPlanet(opts = {}) {
     const p = new Planet(opts);
     this._planets.push(p);
+    this._gameobjects.push(p);
     return p;
   }
   _createStar(opts = {}) {
     const s = new Star(opts);
     this._stars.push(s);
+    this._gameobjects.push(s);
     return s;
   }
   update() {
     gameobjects.forEach(go => go.update());
-    planets.forEach(planet => planet.update());
     command.update();
   }
   render() {
     lineGfx.clear();
     gameobjects.forEach(go => go.render());
-    planets.forEach(planet => planet.render());
     const line = new Phaser.Line(0, 0, 0, 0);
     if (ENV.debug) {
       game.debug.cameraInfo(game.camera, 32, 32);

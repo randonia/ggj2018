@@ -101,8 +101,3 @@ class Ship extends GfxGameObject {
     }
   }
 }
-class Player extends Ship {
-  addIdText(gfx) {
-    this._text = game.add.text(this.x, this.y, '', TEXT_STYLE);
-  }
-}

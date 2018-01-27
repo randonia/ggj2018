@@ -8,6 +8,11 @@ class Command {
     this._message = '';
     this._cursor = NaN;
 
+    this._signals = {
+      // Dispatches a move command
+      onCommandMove: new Phaser.Signal(),
+    };
+
     game.input.keyboard.onPressCallback = (k, e) => this.handleKeyPress(k, e);
     // Handle special keys
     this._keys = {
@@ -32,6 +37,7 @@ class Command {
     if (player) {
       // Do registering of signals
       log('registering player with command interface');
+      player.registerSignals(this._signals);
     } else {
       setTimeout(() => this.registerPlayer(attempts + 1), 250);
     }
@@ -72,7 +78,30 @@ class Command {
   }
   submitCommand() {
     log(`SUBMITTING COMMAND: [${this._message}]`);
+    const [command, ...params] = this._message.split(' ');
+    switch (command) {
+      case 'mv':
+      case 'move':
+        this.commandMove(params);
+        break;
+      default:
+        console.warn(sprintf('Unhandled command: %s [%s]', command, params));
+        break;
+    }
     this._message = '';
+  }
+  commandMove(params) {
+    if (params.length !== 1) {
+      console.warn('params are wrong', params);
+      return;
+    }
+    const targetID = params[0];
+    const target = gameobjects.filter(go => go.id.toLowerCase() === targetID.toLowerCase())[0];
+    if (!target) {
+      console.warn('Invalid target id:', targetID);
+    } else {
+      this._signals.onCommandMove.dispatch(target);
+    }
   }
   deleteChar(wholeWord = false) {
     if (wholeWord) {
