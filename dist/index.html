@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>寂しい帰りの旅</title>
+  <link rel="stylesheet" href="style.css" type="text/css"></link>
+  <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+  <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+  <link href="https://fonts.googleapis.com/css?family=Audiowide" rel="stylesheet">
+
+  <meta charset="utf-8" />
+  <script type="text/javascript">
+    console.info('ＧＧＪ２０１８ ｌｏｎｅｓｏｍｅ ｒｅｔｕｒｎ ｔｒｉｐ．');
+    // Parse out all the debug parameters and use it to define ENV variables
+    var ENV = window.location.search.substr(1).split('&').map(item => item.split('=')).reduce((acc, val) => { acc[val[0]] = val[1]; return acc }, {});
+  </script>
+  <script src="js/lib/sprintf.min.js" type="text/javascript"></script>
+  <script src="js/lib/phaser.js" type="text/javascript"></script>
+  <script src="js/gamestate.js" type="text/javascript"></script>
+  <script src="js/gameobject.js" type="text/javascript"></script>
+  <script src="js/planet.js" type="text/javascript"></script>
+  <script src="js/game.js" type="text/javascript"></script>
+</head>
+<body>
+<div class="header">
+  <h1>ｌｏｎｅｓｏｍｅ ｒｅｔｕｒｎ ｔｒｉｐ．</h1>
+  </div>
+  <div id="game-container" class="game-container"></div>
+  <div class="game-details">
+    <p>Theme: Ｔｒａｎｓｍｉｓｓｉｏｎ</p>
+    <h2>How to Play</h2>
+    <ul>
+      <li></li>
+    </ul>
+    <h2>Links</h2>
+    <a class="link" target="_blank" href="">GGJ Page</a><br>
+    <a class="link" target="_blank" href="https://twitter.com/zambini845">@Zambini845</a><br>
+    <img src="data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAHdElNRQfiARIOJyZSfrwfAAAA6klEQVQoz23RPyuFYRzG8SsnC6Jks7Ecfw8mpbwAeRHeAIPNZlTKavIOvAJlcTpiIIRMyiRJjgGL+hg86nkO13b3/d7Xr999J0VEzLl1ZVrkT8SQQ3Ck3qGIGLNowwdoVhQRk07dW7Ji32dFKfAJONRjQKvSUsI8WlSzXh5U25zLbuaLaX15SXeec5vh9GckjZzFjXK2rblTN2gPXHbl68++o2mknXaSpBbTjioNq3hwoI2WmYi6ZoFfLVvwVJyOjSvW/FXODeotGo9NlF/iR3m3Y8tbBXcoOm53KD/lLeP//KeIKReuzZbxNzhNHmZ9bRY7AAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE4LTAxLTI2VDIxOjQyOjI4LTA4OjAweYY8ywAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOC0wMS0xOFQxNDozOTozOC0wODowMAf8UXoAAAAASUVORK5CYII=">
+    <a class="link" target="_blank" href="https://github.com/randonia/ggj2018">GitHub</a>
+    <ul>
+    </ul>
+  </div>
+  <div class="footer">
+    © Zambini
+  </div>
+</body>
+</html>

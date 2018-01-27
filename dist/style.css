@@ -1,0 +1,53 @@
+/* blue #3a4651 */
+/*text-shadow: 0 -1px 1px #000, 0 1px 1px #000, -1px 0 1px #000, 1px 0 1px #000*/
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(8, 8, 8);
+  color: rgb(127, 127, 127);
+  font-family: 'Audiowide', cursive;
+  margin: 0px;
+  padding: 0px;
+}
+
+h1 {
+  text-align: center;
+  color: #006f0e;
+  text-shadow: 1px 1px 2px black;
+}
+
+ul {
+  list-style: none;
+}
+
+.link {
+  color: rgb(127, 127, 127);
+}
+
+.link:hover {
+  color: rgb(127, 127, 127);
+}
+
+.link:visited {
+  color: rgb(127, 127, 127);
+}
+
+.game-container {
+  height: 768px;
+  width: 1280px;
+  margin: 0px auto;
+  outline: 1px solid #006f0e;
+}
+
+.game-details {
+  height: 400px;
+  width: 800px;
+  margin: 0px auto;
+  color: #006f0e;
+}
+
+.footer {
+  text-align: center;
+}
