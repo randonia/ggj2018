@@ -11,6 +11,7 @@ class Command {
     this._signals = {
       // Dispatches a move command
       onCommandMove: new Phaser.Signal(),
+      onCommandScan: new Phaser.Signal(),
     };
 
     game.input.keyboard.onPressCallback = (k, e) => this.handleKeyPress(k, e);
@@ -82,6 +83,10 @@ class Command {
       case 'move':
         this.commandMove(params);
         break;
+      case 's':
+      case 'scan':
+        this.commandScan(params);
+        break;
       default:
         console.warn(sprintf('Unhandled command: %s [%s]', command, params));
         break;
@@ -89,17 +94,35 @@ class Command {
     this._message = '';
   }
   commandMove(params) {
+    const {
+      target
+    } = this._handleFindByIdCommand(params);
+    if (!target) {
+      console.warn('Invalid target id:', targetID);
+    } else {
+      this._signals.onCommandMove.dispatch(target);
+    }
+  }
+  commandScan(params) {
+    const {
+      target
+    } = this._handleFindByIdCommand(params);
+    if (!target) {
+      console.warn('Invalid target id:', targetID);
+    } else {
+      this._signals.onCommandScan.dispatch(target);
+    }
+  }
+  _handleFindByIdCommand(params) {
     if (params.length !== 1) {
       console.warn('params are wrong', params);
       return;
     }
     const targetID = params[0];
     const target = gameobjects.filter(go => go.id.toLowerCase() === targetID.toLowerCase())[0];
-    if (!target) {
-      console.warn('Invalid target id:', targetID);
-    } else {
-      this._signals.onCommandMove.dispatch(target);
-    }
+    return {
+      target
+    };
   }
   deleteChar(wholeWord = false) {
     if (wholeWord) {

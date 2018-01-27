@@ -35,14 +35,22 @@ class AIShip extends Ship {
   findTarget() {
     // Find a random target to go hang out in
     // Never target the player or another ship
-    let possibleTargets = gameobjects.filter(go => go.id !== player.id && !(go instanceof Ship)).concat();
+    let possibleTargets = gameobjects.filter(go => this.filterTargetFunc(go)).concat();
     if (this._orbitTarget) {
       possibleTargets = gameobjects.filter(go => go.id.toLowerCase() !== this._orbitTarget.toLowerCase());
     }
     const target = possibleTargets[Math.floor(Math.random() * possibleTargets.length)];
     return target;
   }
+  filterTargetFunc(go) {
+    return go.id !== player.id && !(go instanceof Ship) && go.system == this.system;
+  }
 }
 class VillainShip extends AIShip {
-
+  constructor(opts = {}) {
+    Object.assign(opts, {
+      id: opts.id || 'villain',
+    });
+    super(opts);
+  }
 }

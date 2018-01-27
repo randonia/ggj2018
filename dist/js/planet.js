@@ -46,11 +46,19 @@ class Planet extends GfxGameObject {
     const {
       _primary: primary,
     } = this;
-    if (primary) {
-      lineGfx.lineStyle(1, Phaser.Color.YELLOW, 0.2);
-      lineGfx.moveTo(this.x, this.y);
-      lineGfx.lineTo(primary.x, primary.y);
+    // Debug all non-current system items somehow
+    if (this.system !== currentSystem) {
+      lineGfx.lineStyle(1, Phaser.Color.GRAY, 0.1);
+      lineGfx.beginFill(Phaser.Color.GRAY, 0.1);
+      lineGfx.drawCircle(this.x, this.y, this.size);
       lineGfx.endFill();
+    } else {
+      if (primary) {
+        lineGfx.lineStyle(1, Phaser.Color.YELLOW, 0.2);
+        lineGfx.moveTo(this.x, this.y);
+        lineGfx.lineTo(primary.x, primary.y);
+        lineGfx.endFill();
+      }
     }
   }
 }

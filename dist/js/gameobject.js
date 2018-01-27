@@ -20,12 +20,19 @@ class GameObject {
   get size() {
     return this._size;
   }
+  get system() {
+    return this._system;
+  }
+  set system(value) {
+    this._system = value;
+  }
   constructor(opts = {}) {
     this.id = opts.id || Math.random().toString().substr(2);
     this.x = opts.x || 0;
     this.y = opts.y || 0;
     this._size = opts.size || 1;
     this._fontProps = opts.fontProps || {};
+    this._system = opts.system;
   }
   update(delta) {
     if (this._sprite) {

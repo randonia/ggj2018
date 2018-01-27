@@ -5,6 +5,7 @@ var lineGfx;
 var player;
 var command;
 var UI;
+var currentSystem;
 /**
  * Base state class
  **/
@@ -27,54 +28,71 @@ class GameState {
 
     player = new Player({
       x: 150,
-      y: 25
+      y: 25,
     });
     gameobjects.push(player);
     game.camera.follow(player.sprite, undefined, 0.1, 0.1);
     command = new Command();
     UI = new UIController();
-    this.loadSystem(LEVEL_DATA.system1);
+    // Construct the entire universe at once
+    this.buildGalaxy(LEVEL_DATA);
+    // And then load into this our existing system
+    this.loadSystem('system1');
   }
   // Load in data from levels.js
-  loadSystem(systemData) {
-    // First create everything
-    systemData.stars.forEach(starData => {
-      // Create stars
-      this._createStar(starData);
+  buildGalaxy(allSystems) {
+    Object.keys(allSystems.systems).forEach((systemId) => {
+      const systemData = allSystems.systems[systemId];
+      // First create everything in this system
+      systemData.stars.forEach(starData => {
+        // Create stars
+        this._createStar(Object.assign({}, starData, {
+          system: systemId
+        }));
+      });
+      systemData.planets.forEach(planetData => {
+        // Create planets
+        this._createPlanet(Object.assign({}, planetData, {
+          system: systemId
+        }));
+      });
+      // Now go through and set orbits for planets (do this after so planets can orbit other planets)
+      this._planets.forEach(planet => {
+        // Find the target
+        const [targetType, targetId] = planet._orbitTarget.split('|');
+        let target;
+        switch (targetType) {
+          case 'star':
+            target = this._stars.filter(otherStar => otherStar.id === targetId)[0];
+            break;
+          case 'planet':
+            target = this._planets.filter(otherPlanet => otherPlanet.id === targetId)[0];
+            break;
+          default:
+            console.warn('Unhandled type:', targetType);
+            break;
+        }
+        if (target) {
+          planet.setOrbit(target);
+        } else {
+          console.warn('No orbit target for ', planet.id);
+        }
+      });
     });
-    systemData.planets.forEach(planetData => {
-      // Create planets
-      this._createPlanet(planetData);
-    });
-    // Now go through and set orbits for planets (do this after so planets can orbit other planets)
-    this._planets.forEach(planet => {
-      // Find the target
-      const [targetType, targetId] = planet._orbitTarget.split('|');
-      let target;
-      switch (targetType) {
-        case 'star':
-          target = this._stars.filter(otherStar => otherStar.id === targetId)[0];
-          break;
-        case 'planet':
-          target = this._planets.filter(otherPlanet => otherPlanet.id === targetId)[0];
-          break;
-        default:
-          console.warn('Unhandled type:', targetType);
-          break;
-      }
-      if (target) {
-        planet.setOrbit(target);
-      } else {
-        console.warn('No orbit target for ', planet.id);
-      }
-    });
+  }
+  loadSystem(systemId) {
+    this._currentSystem = currentSystem = systemId;
+    player.system = systemId;
+    const systemData = LEVEL_DATA.systems[systemId];
     // Update the system data
     UI.updateSystemData(systemData);
-
+    gameobjects.forEach(go => go.sprite.visible = go.system === systemId);
     setTimeout(() => this._createAIShip(), 250);
   }
   _createAIShip(opts = {}) {
-    const ship = new AIShip();
+    const ship = new AIShip({
+      system: this._currentSystem
+    });
     this._gameobjects.push(ship);
     return ship;
   }
@@ -106,9 +124,12 @@ class GameState {
     // Draw each planet to each other planet
     for (var pAIdx = 0; pAIdx < planets.length; pAIdx++) {
       const planetA = planets[pAIdx];
+      if (planetA.system !== this._currentSystem) {
+        continue;
+      }
       for (var pBIdx = 0; pBIdx < planets.length; pBIdx++) {
         const planetB = planets[pBIdx];
-        if (planetA === planetB) {
+        if (planetA === planetB || planetB.system !== this._currentSystem) {
           continue;
         }
         line.fromSprite(planetA.sprite, planetB.sprite);
