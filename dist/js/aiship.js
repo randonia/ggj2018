@@ -1,3 +1,5 @@
+const VILLAIN_GOAL_COUNT = parseInt(ENV.villaingoalcount) || 10;
+
 const AISTATE = {
   IDLE: 'idle',
   THINKING: 'thinking',
@@ -171,14 +173,13 @@ class VillainShip extends AIShip {
    */
   generateGoals() {
     const choices = gameobjects.filter(go => (go instanceof Planet) || (go instanceof Star)).concat();
-    const DESIRED_GOALS = 5;
     const targets = [];
-    while (targets.length < DESIRED_GOALS && choices.length) {
+    while (targets.length < VILLAIN_GOAL_COUNT && choices.length) {
       targets.push(choices.splice(Math.floor(Math.random() * choices.length), 1)[0]);
     }
     console.log('TARGETS CHOSEN:', targets);
-    if (targets.length !== DESIRED_GOALS) {
-      console.warn(sprintf('Did not find enough goals - expected [%s] found [%s]', DESIRED_GOALS, targets.length));
+    if (targets.length !== VILLAIN_GOAL_COUNT) {
+      console.warn(sprintf('Did not find enough goals - expected [%s] found [%s]', VILLAIN_GOAL_COUNT, targets.length));
     }
     return targets;
   }

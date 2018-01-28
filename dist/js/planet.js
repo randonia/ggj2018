@@ -1,4 +1,10 @@
 class Planet extends GfxGameObject {
+  set scannable(value) {
+    this._scannable = value;
+  }
+  get scannable() {
+    return this._scannable;
+  }
   /**
       Options for a planet:
         orbitTarget: sprite to orbit
@@ -15,6 +21,7 @@ class Planet extends GfxGameObject {
     this._offset = opts.offset || 0;
     this._speed = Math.sqrt(1 / this._orbitRange);
     this._visitors = {};
+    this._scannable = false;
   }
   fillGfx(gfx) {
     gfx.lineStyle(2, this.primaryColor, 0.8);

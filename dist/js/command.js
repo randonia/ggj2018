@@ -10,6 +10,7 @@ class Command {
 
     this._signals = {
       // Dispatches a move command
+      onCommandHack: new Phaser.Signal(),
       onCommandMove: new Phaser.Signal(),
       onCommandScan: new Phaser.Signal(),
       onCommandWarp: new Phaser.Signal(),
@@ -80,6 +81,10 @@ class Command {
     log(`SUBMITTING COMMAND: [${this._message}]`);
     const [command, ...params] = this._message.split(' ');
     switch (command) {
+      case 'h':
+      case 'hack':
+        this.commandHack(params);
+        break;
       case 'mv':
       case 'move':
         this.commandMove(params);
@@ -113,12 +118,23 @@ class Command {
       console.warn('Invalid system id');
     }
   }
+  commandHack(params) {
+    const {
+      target
+    } = this._handleFindByIdCommand(params);
+    if (!target) {
+      console.warn('Invalid target id:', params);
+    } else {
+      console.log('Submitting hack');
+      this._signals.onCommandHack.dispatch(target);
+    }
+  }
   commandMove(params) {
     const {
       target
     } = this._handleFindByIdCommand(params);
     if (!target) {
-      console.warn('Invalid target id:', targetID);
+      console.warn('Invalid target id:', params);
     } else {
       this._signals.onCommandMove.dispatch(target);
     }
@@ -129,10 +145,10 @@ class Command {
   _handleFindByIdCommand(params) {
     if (params.length !== 1) {
       console.warn('params are wrong', params);
-      return;
+      return {};
     }
-    const targetID = params[0];
-    const target = gameobjects.filter(go => go.id.toLowerCase() === targetID.toLowerCase())[0];
+    const targetId = params[0];
+    const target = gameobjects.filter(go => go.id.toLowerCase() === targetId.toLowerCase())[0];
     return {
       target
     };

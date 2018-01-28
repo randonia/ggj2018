@@ -195,7 +195,9 @@ class GameState {
   }
   update() {
     gameobjects.forEach(go => {
-      go.sprite.visible = go.system === this._currentSystem;
+      if (go.sprite) {
+        go.sprite.visible = go.system === this._currentSystem || go.isUI;
+      }
       go.update();
     });
 
