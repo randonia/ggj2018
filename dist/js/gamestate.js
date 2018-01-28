@@ -40,6 +40,7 @@ class GameState {
     this.buildGalaxy(LEVEL_DATA);
     // And then load into this our existing system
     this.loadSystem('system1');
+    this.initializeShips();
     setTimeout(() => villain = this._createVillain(), 250);
   }
   // Load in data from levels.js
@@ -90,17 +91,40 @@ class GameState {
     // Update the system data
     UI.updateSystemData(systemData);
     gameobjects.forEach(go => go.sprite.visible = go.system === systemId);
-    setTimeout(() => this._createAIShip(), 250);
+  }
+  initializeShips() {
+    const shipCount = parseInt(ENV.shipcount) || 100;
+    this.makeShip(shipCount);
+  }
+  makeShip(remaining = 0) {
+    log(sprintf('Making ship... [%s] remaining', remaining));
+    if (remaining <= 0) {
+      return;
+    } else {
+      const {
+        x,
+        y
+      } = game.world.bounds.random();
+      this._createAIShip({
+        x,
+        y
+      });
+      setTimeout(() => {
+        this.makeShip(remaining - 1);
+      }, 100 + Math.random() * 100);
+    }
   }
   _createVillain(opts = {}) {
-    const _villain = new VillainShip(Object.assign({}, opts, {system: this._currentSystem}));
+    const _villain = new VillainShip(Object.assign({}, opts, {
+      system: this._currentSystem
+    }));
     this._gameobjects.push(_villain);
     return _villain;
   }
   _createAIShip(opts = {}) {
-    const ship = new AIShip({
+    const ship = new AIShip(Object.assign({}, opts, {
       system: this._currentSystem
-    });
+    }));
     this._gameobjects.push(ship);
     return ship;
   }

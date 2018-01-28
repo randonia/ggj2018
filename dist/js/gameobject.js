@@ -75,6 +75,6 @@ class GfxGameObject extends GameObject {
     this._sprite.anchor.x = this._sprite.anchor.y = 0.5;
   }
   addIdText(gfx) {
-    this._text = game.add.text(this.x, this.y, this.id, Object.assign({}, TEXT_STYLE, this._fontProps));
+    this._text = game.add.text(0, 0, this.id, Object.assign({}, TEXT_STYLE, this._fontProps));
   };
 }

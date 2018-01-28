@@ -6,6 +6,7 @@ const AISTATE = {
   FLEEING: 'fleeing',
   WARPING: 'warping',
   TASKING: 'tasking',
+  HALT: 'halt',
 }
 class AIShip extends Ship {
   constructor(opts = {}) {
@@ -24,23 +25,35 @@ class AIShip extends Ship {
         const {
           target,
           targetSystem,
-          villainComplete,
         } = this.findTarget();
-        if (villainComplete) {
-          // Do something?
+        if (!target && !targetSystem) {
+          break;
+        }
+        if (targetSystem !== this.system) {
+          // Need to travel systems first
+          this.travelToSystem(targetSystem);
         } else {
-          if (targetSystem !== this.system) {
-            // Need to travel systems first
-            this.travelToSystem(targetSystem);
-          } else {
-            this._aiState = AISTATE.MOVING;
-            this.orbit(target);
-          }
+          this._aiState = AISTATE.MOVING;
+          this.orbit(target);
         }
         break;
       case AISTATE.MOVING:
         if (this._state === SHIPSTATE.ORBITING) {
           this._aiState = AISTATE.ORBITING;
+        }
+        break;
+      case AISTATE.ORBITING:
+        // A non villain orbiting
+        if (!this.villain && !this._aiClock) {
+          // Random between 3 and 13 seconds
+          const delayTime = Phaser.Timer.SECOND * (Math.random() * 10) + 3;
+          const timer = game.time.events.add(delayTime, () => {
+            this._aiClock = undefined;
+            this._aiState = AISTATE.IDLE;
+          }, this);
+          this._aiClock = {
+            timer,
+          };
         }
         break;
       default:
@@ -103,8 +116,8 @@ class VillainShip extends AIShip {
         // progress their doomsay clock
         if (!this._aiClock) {
           const timer = game.time.create(false);
-          const villainLoopTimer = parseInt(ENV.villaintimer) || Phaser.Timer.SECOND * 5;
-          timer.loop(villainLoopTimer, this.progressClock, this);
+          const loopTimer = parseInt(ENV.villaintimer) || Phaser.Timer.SECOND * 5;
+          timer.loop(loopTimer, this.progressClock, this);
           this._aiClock = {
             timer,
             total: Math.floor(Math.random() * 10) + 4,
@@ -181,9 +194,7 @@ class VillainShip extends AIShip {
     } else {
       // The Villain has completed all objectives!
       this._signals.onVillainComplete.dispatch();
-      return {
-        villainComplete: true
-      };
+      return {};
     }
   }
 }

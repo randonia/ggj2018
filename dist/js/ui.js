@@ -35,7 +35,7 @@ class UIController {
     log(sprintf('UI: Villain progress: %s', message));
   }
   onVillainCompleteNotify() {
-    log('UI: Villain completed mission: %s');
+    log('UI: Villain completed mission');
   }
   updateSystemData(systemData) {
     this._systemData = systemData;
