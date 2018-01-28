@@ -62,6 +62,7 @@ class Ship extends GfxGameObject {
     warpTween.start();
     this._tween = warpTween;
     this.target(null);
+    return true;
   }
   cleanUpWarp(ship, tween, systemId) {
     console.log(this.id, 'FINISHED WARPING TO SYSTEM:', systemId);

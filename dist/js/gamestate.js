@@ -32,6 +32,7 @@ class GameState {
       x: 150,
       y: 25,
     });
+    this.registerSignals(player);
     gameobjects.push(player);
     game.camera.follow(player.sprite, undefined, 0.1, 0.1);
     command = new Command();
@@ -41,7 +42,6 @@ class GameState {
     // And then load into this our existing system
     this.loadSystem('system1');
     this.initializeShips();
-    setTimeout(() => villain = this._createVillain(), 250);
   }
   // Load in data from levels.js
   buildGalaxy(allSystems) {
@@ -87,14 +87,39 @@ class GameState {
   loadSystem(systemId) {
     this._currentSystem = currentSystem = systemId;
     player.system = systemId;
-    const systemData = LEVEL_DATA.systems[systemId];
     // Update the system data
-    UI.updateSystemData(systemData);
+    UI.updateSystemData(systemId);
     gameobjects.forEach(go => go.sprite.visible = go.system === systemId);
+  }
+  registerSignals(sender) {
+    const signals = sender._signals;
+    if (signals) {
+      if (signals.onPlayerChangeSystem) {
+        signals.onPlayerChangeSystem.add(this.handlePlayerChangedSystem, this);
+      }
+    }
+  }
+  unregisterSignals(sender) {
+    const signals = sender._signals;
+    if (signals) {
+      if (signals.onPlayerChangeSystem) {
+        signals.onPlayerChangeSystem.remove(this.handlePlayerChangedSystem, this);
+      }
+    }
   }
   initializeShips() {
     const shipCount = parseInt(ENV.shipcount) || 100;
     this.makeShip(shipCount);
+    setTimeout(() => {
+      const {
+        x,
+        y
+      } = game.world.bounds.random();
+      villain = this._createVillain({
+        x,
+        y
+      });
+    }, 125);
   }
   makeShip(remaining = 0) {
     log(sprintf('Making ship... [%s] remaining', remaining));
@@ -111,7 +136,7 @@ class GameState {
       });
       setTimeout(() => {
         this.makeShip(remaining - 1);
-      }, 100 + Math.random() * 100);
+      }, 25 + Math.random() * 100);
     }
   }
   _createVillain(opts = {}) {
@@ -141,14 +166,22 @@ class GameState {
     this._gameobjects.push(s);
     return s;
   }
+  handlePlayerChangedSystem(systemId) {
+    this.loadSystem(systemId);
+  }
   handleOnVillainComplete() {
     log('Main game handling villain complete');
     const delayTime = Phaser.Timer.SECOND * 2;
     game.camera.fade(Phaser.Color.BLACK, delayTime)
+    game.camera.onFadeComplete.add(this._resetFade, this);
     const timer = game.time.events.add(delayTime, () => {
       // Do any cleanup here
       this.transitionToScene('gameend');
     }, this);
+  }
+  _resetFade() {
+    game.camera.resetFX();
+    game.camera.onFadeComplete.remove(this._resetFade, this);
   }
   transitionToScene(scene) {
     switch (scene) {

@@ -12,7 +12,7 @@ function rndOffset() {
 const LEVEL_DATA = {
   systems: {
     system1: {
-      name: 'SYSTEM A',
+      name: 'S01A',
       stars: [{
         id: '0xA01',
         size: 150,
@@ -45,7 +45,7 @@ const LEVEL_DATA = {
       playerPrimary: 'star|0xA01',
     },
     system2: {
-      name: 'SYSTEM B',
+      name: 'S02B',
       stars: [{
         id: '1bC05',
         size: 250,

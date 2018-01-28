@@ -37,11 +37,16 @@ class UIController {
   onVillainCompleteNotify() {
     log('UI: Villain completed mission');
   }
-  updateSystemData(systemData) {
+  updateSystemData(systemId) {
+    const systemData = LEVEL_DATA.systems[systemId];
     this._systemData = systemData;
     this._planetsText.setText(sprintf('Planets:\n%s', systemData.planets.map(pData => pData.id).join('\n')));
     this._starsText.setText(sprintf('Stars:\n%s', systemData.stars.map(sData => sData.id).join('\n')));
-    this._systemInfo.setText(sprintf('Current system:\n%s', systemData.name));
+    let sysInfo = sprintf('Current system:\n%s', systemData.name);
+    // Glorious UI programming
+    const otherSystems = Object.keys(LEVEL_DATA.systems).filter(sKey => sKey !== systemId).map(sKey => LEVEL_DATA.systems[sKey].name);
+    sysInfo += sprintf('\nOther systems:\n%s', otherSystems.join('\n'));
+    this._systemInfo.setText(sysInfo);
   }
   update() {}
   render() {

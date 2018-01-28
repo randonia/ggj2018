@@ -12,6 +12,7 @@ class Command {
       // Dispatches a move command
       onCommandMove: new Phaser.Signal(),
       onCommandScan: new Phaser.Signal(),
+      onCommandWarp: new Phaser.Signal(),
     };
 
     game.input.keyboard.onPressCallback = (k, e) => this.handleKeyPress(k, e);
@@ -87,11 +88,30 @@ class Command {
       case 'scan':
         this.commandScan(params);
         break;
+      case 'w':
+      case 'warp':
+        this.commandWarp(params);
+        break;
       default:
         console.warn(sprintf('Unhandled command: %s [%s]', command, params));
         break;
     }
     this._message = '';
+  }
+  commandWarp(params) {
+    if (params.length !== 1) {
+      console.warn('params are wrong', params);
+      return;
+    }
+    const systemName = params[0].trim().toLowerCase();
+    const systemKey = Object.keys(LEVEL_DATA.systems).filter((sysKey) => {
+      return LEVEL_DATA.systems[sysKey] && LEVEL_DATA.systems[sysKey].name.trim().toLowerCase() === systemName;
+    })[0];
+    if (systemKey) {
+      this._signals.onCommandWarp.dispatch(systemKey);
+    } else {
+      console.warn('Invalid system id');
+    }
   }
   commandMove(params) {
     const {
