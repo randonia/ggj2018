@@ -14,6 +14,7 @@ class Planet extends GfxGameObject {
     this._orbitRange = opts.orbitRange || 1;
     this._offset = opts.offset || 0;
     this._speed = Math.sqrt(1 / this._orbitRange);
+    this._visitors = {};
   }
   fillGfx(gfx) {
     gfx.lineStyle(2, this.primaryColor, 0.8);

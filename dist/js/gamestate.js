@@ -89,7 +89,6 @@ class GameState {
     player.system = systemId;
     // Update the system data
     UI.updateSystemData(systemId);
-    gameobjects.forEach(go => go.sprite.visible = go.system === systemId);
   }
   registerSignals(sender) {
     const signals = sender._signals;
@@ -195,7 +194,11 @@ class GameState {
     }
   }
   update() {
-    gameobjects.forEach(go => go.update());
+    gameobjects.forEach(go => {
+      go.sprite.visible = go.system === this._currentSystem;
+      go.update();
+    });
+
     command.update();
   }
   render() {

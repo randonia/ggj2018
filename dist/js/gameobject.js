@@ -73,6 +73,10 @@ class GfxGameObject extends GameObject {
     gfx.addChild(this._text);
     this._sprite = gfx;
     this._sprite.anchor.x = this._sprite.anchor.y = 0.5;
+    this._visitors = {};
+  }
+  touch(source) {
+    this._visitors[source.id] = !!source.villain;
   }
   addIdText(gfx) {
     this._text = game.add.text(0, 0, this.id, Object.assign({}, TEXT_STYLE, this._fontProps));

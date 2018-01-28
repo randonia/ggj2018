@@ -25,7 +25,11 @@ class AIShip extends Ship {
         const {
           target,
           targetSystem,
+          villainComplete,
         } = this.findTarget();
+        if (this.villain && villainComplete) {
+          this._aiState = AISTATE.HALT;
+        }
         if (!target && !targetSystem) {
           break;
         }
@@ -194,7 +198,9 @@ class VillainShip extends AIShip {
     } else {
       // The Villain has completed all objectives!
       this._signals.onVillainComplete.dispatch();
-      return {};
+      return {
+        villainComplete: true
+      };
     }
   }
 }

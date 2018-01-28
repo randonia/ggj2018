@@ -124,14 +124,7 @@ class Command {
     }
   }
   commandScan(params) {
-    const {
-      target
-    } = this._handleFindByIdCommand(params);
-    if (!target) {
-      console.warn('Invalid target id:', targetID);
-    } else {
-      this._signals.onCommandScan.dispatch(target);
-    }
+    this._signals.onCommandScan.dispatch();
   }
   _handleFindByIdCommand(params) {
     if (params.length !== 1) {

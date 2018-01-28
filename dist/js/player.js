@@ -24,18 +24,12 @@ class Player extends Ship {
   handleMoveSignal(target) {
     this.orbit(target);
   }
-  handleScanSignal(target) {
-    this.scan(target, (result) => {
+  handleScanSignal() {
+    this.scan((result) => {
       console.log('SCAN RESULTS:', result);
-      switch (result.status) {
-        case 'success':
-          console.log('Found a clue');
-          break;
-        case 'failure':
-          console.log('Alerted the villain');
-          break;
-        case 'nothing':
-          break;
+      if (result.planets && result.planets.length) {
+        // PLANETS WORTH EXPLORING
+        console.log(result);
       }
     });
   }
@@ -58,17 +52,24 @@ class Player extends Ship {
     this._signals.onPlayerChangeSystem.dispatch(systemId);
   }
   // Must provide a callback fn
-  scan(target, callbackFn) {
+  scan(callbackFn) {
     if (!callbackFn) {
       console.warn('No callback provided');
       return;
     }
     // Do some pretend stuff for scanning
-    console.log('Beginning scan of ', target);
+    console.log('Beginning scan...');
     setTimeout(() => {
+      const visitedPlanets = planets.filter(p => p.system === currentSystem).filter(p1 => {
+        const visitors = Object.keys(p1._visitors).map(visitorId => {
+          return p1._visitors[visitorId];
+        });
+        console.log('visitors?', visitors);
+        return visitors.filter(v => v).length;
+      });
+      console.log('planets:', visitedPlanets);
       callbackFn({
-        target,
-        status: 'success'
+        planets: visitedPlanets,
       });
     }, 1000);
   }
