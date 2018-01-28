@@ -4,6 +4,11 @@ const FONTSIZE = {
   NORMAL: 18,
   LARGE: 24,
 };
+
+function rndOffset() {
+  return Math.random() * Math.PI * 2;
+}
+
 const LEVEL_DATA = {
   systems: {
     system1: {
@@ -15,17 +20,17 @@ const LEVEL_DATA = {
       planets: [{
         orbitTarget: 'star|0xA01',
         orbitRange: 900,
-        offset: Math.random(),
+        offset: rndOffset(),
         id: 'AX01',
       }, {
         orbitTarget: 'star|0xA01',
         orbitRange: 300,
-        offset: Math.random(),
+        offset: rndOffset(),
         id: 'AX02',
       }, {
         orbitTarget: 'star|0xA01',
         orbitRange: 450,
-        offset: Math.random(),
+        offset: rndOffset(),
         id: 'AX03',
       }, {
         orbitTarget: 'planet|AX02',
@@ -34,7 +39,7 @@ const LEVEL_DATA = {
         fontProps: {
           fontSize: FONTSIZE.TINY,
         },
-        offset: Math.random(),
+        offset: rndOffset(),
         id: 'AX02a',
       }],
       playerPrimary: 'star|0xA01',
@@ -48,8 +53,26 @@ const LEVEL_DATA = {
       planets: [{
         orbitTarget: 'star|1bC05',
         orbitRange: 150,
-        offset: Math.random(),
+        offset: rndOffset(),
         id: 'CX23'
+      }, {
+        orbitTarget: 'star|1bC05',
+        orbitRange: 350,
+        size: 25,
+        offset: rndOffset(),
+        id: 'CX33'
+      }, {
+        orbitTarget: 'planet|CX23',
+        orbitRange: 50,
+        size: 10,
+        offset: rndOffset(),
+        id: 'CX23b'
+      }, {
+        orbitTarget: 'planet|CX23',
+        orbitRange: 60,
+        size: 14,
+        offset: rndOffset(),
+        id: 'CX23b'
       }],
       playerPrimary: '',
     },
@@ -58,7 +81,7 @@ const LEVEL_DATA = {
 
 /*
  * System template
-   systemID: {
+   systemId: {
         name: SYSTEMDISPLAYNAME,
         stars: [{
           id: '0xA01',
@@ -71,7 +94,7 @@ const LEVEL_DATA = {
           fontProps: {
             font text properties (optional),
           },
-          offset: Math.random() usually,
+          offset: rndOffset() usually,
           id: 'UNIQUE IDENTIFICATION'
         }],
         playerPrimary: '',

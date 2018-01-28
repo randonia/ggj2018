@@ -6,6 +6,7 @@ var player;
 var command;
 var UI;
 var currentSystem;
+var villain;
 /**
  * Base state class
  **/
@@ -15,6 +16,7 @@ class GameState {
     lineGfx = game.add.graphics(0, 0);
     game.world.setBounds(-2 * WIDTH, -2 * HEIGHT, 4 * WIDTH, 4 * HEIGHT);
     game.camera.setBoundsToWorld();
+    game.camera.roundPx = false;
 
     // Prevent pausing on lose focus
     game.stage.disableVisibilityChange = true;
@@ -38,6 +40,7 @@ class GameState {
     this.buildGalaxy(LEVEL_DATA);
     // And then load into this our existing system
     this.loadSystem('system1');
+    setTimeout(() => villain = this._createVillain(), 250);
   }
   // Load in data from levels.js
   buildGalaxy(allSystems) {
@@ -89,6 +92,11 @@ class GameState {
     gameobjects.forEach(go => go.sprite.visible = go.system === systemId);
     setTimeout(() => this._createAIShip(), 250);
   }
+  _createVillain(opts = {}) {
+    const _villain = new VillainShip(Object.assign({}, opts, {system: this._currentSystem}));
+    this._gameobjects.push(_villain);
+    return _villain;
+  }
   _createAIShip(opts = {}) {
     const ship = new AIShip({
       system: this._currentSystem
@@ -118,7 +126,7 @@ class GameState {
     const line = new Phaser.Line(0, 0, 0, 0);
     if (ENV.debug) {
       game.debug.cameraInfo(game.camera, 32, 32);
-      game.debug.spriteInfo(player.sprite, 384, 32);
+      game.debug.spriteInfo(player.sprite, 32, 180);
     }
     command.render();
     // Draw each planet to each other planet

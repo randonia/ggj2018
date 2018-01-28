@@ -18,6 +18,24 @@ class UIController {
     upperRight.addChild(this._starsText);
     upperRight.addChild(this._systemInfo);
     upperRight.fixedToCamera = true;
+
+    setTimeout(() => this.registerVillain(), 125);
+  }
+  registerVillain(attempts = 0) {
+    if (!villain) {
+      setTimeout(() => this.registerVillain(attempts + 1), 250);
+    } else {
+      // register signals with the villain
+      log('Villain registered with UI');
+      villain._signals.onClockNotify.add(this.onVillainClockNotify, this);
+      villain._signals.onVillainComplete.add(this.onVillainCompleteNotify, this);
+    }
+  }
+  onVillainClockNotify(message) {
+    log(sprintf('UI: Villain progress: %s', message));
+  }
+  onVillainCompleteNotify() {
+    log('UI: Villain completed mission: %s');
   }
   updateSystemData(systemData) {
     this._systemData = systemData;
