@@ -149,7 +149,7 @@ class Ship extends GfxGameObject {
     const {
       _primary: primary
     } = this;
-    if (primary) {
+    if (ENV.debug && primary) {
       lineGfx.lineStyle(1, 0x33ff33, 0.3);
       lineGfx.moveTo(this.x, this.y);
       lineGfx.lineTo(primary.x, primary.y);

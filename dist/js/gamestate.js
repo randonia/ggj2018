@@ -119,6 +119,7 @@ class GameState {
       system: this._currentSystem
     }));
     this._gameobjects.push(_villain);
+    _villain._signals.onVillainComplete.add(this.handleOnVillainComplete, this);
     return _villain;
   }
   _createAIShip(opts = {}) {
@@ -140,6 +141,26 @@ class GameState {
     this._gameobjects.push(s);
     return s;
   }
+  handleOnVillainComplete() {
+    log('Main game handling villain complete');
+    const delayTime = Phaser.Timer.SECOND * 2;
+    game.camera.fade(Phaser.Color.BLACK, delayTime)
+    const timer = game.time.events.add(delayTime, () => {
+      // Do any cleanup here
+      this.transitionToScene('gameend');
+    }, this);
+  }
+  transitionToScene(scene) {
+    switch (scene) {
+      case 'gameend':
+        // game ended, dump state
+        game.state.start(scene);
+        break;
+      default:
+        console.warn(sprintf('Unhandled state: [%s] - ignoring', scene));
+        break;
+    }
+  }
   update() {
     gameobjects.forEach(go => go.update());
     command.update();
@@ -154,23 +175,24 @@ class GameState {
     }
     command.render();
     // Draw each planet to each other planet
-    for (var pAIdx = 0; pAIdx < planets.length; pAIdx++) {
-      const planetA = planets[pAIdx];
-      if (planetA.system !== this._currentSystem) {
-        continue;
-      }
-      for (var pBIdx = 0; pBIdx < planets.length; pBIdx++) {
-        const planetB = planets[pBIdx];
-        if (planetA === planetB || planetB.system !== this._currentSystem) {
+    if (ENV.debug) {
+      for (var pAIdx = 0; pAIdx < planets.length; pAIdx++) {
+        const planetA = planets[pAIdx];
+        if (planetA.system !== this._currentSystem) {
           continue;
         }
-        line.fromSprite(planetA.sprite, planetB.sprite);
-        lineGfx.lineStyle(1, 0xffffff, 0.2);
-        lineGfx.moveTo(line.start.x, line.start.y);
-        lineGfx.lineTo(line.end.x, line.end.y);
-        lineGfx.endFill();
+        for (var pBIdx = 0; pBIdx < planets.length; pBIdx++) {
+          const planetB = planets[pBIdx];
+          if (planetA === planetB || planetB.system !== this._currentSystem) {
+            continue;
+          }
+          line.fromSprite(planetA.sprite, planetB.sprite);
+          lineGfx.lineStyle(1, 0xffffff, 0.2);
+          lineGfx.moveTo(line.start.x, line.start.y);
+          lineGfx.lineTo(line.end.x, line.end.y);
+          lineGfx.endFill();
+        }
       }
     }
-
   }
 }

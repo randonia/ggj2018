@@ -10,5 +10,6 @@ window.onload = () => {
   HEIGHT = scrollHeight;
   game = new Phaser.Game(WIDTH, HEIGHT, ENV.debug ? Phaser.CANVAS : Phaser.AUTO, 'game-container');
   game.state.add('play', new GameState());
+  game.state.add('gameend', new GameEndState());
   game.state.start('play');
 }
